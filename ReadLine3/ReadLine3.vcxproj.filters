@@ -18,9 +18,21 @@
     <ClCompile Include="src\buffered_reader.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Misc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\readline3.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\buffered_reader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Misc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\readline3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

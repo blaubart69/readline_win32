@@ -171,6 +171,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="TestBufferedReader.cpp" />
+    <ClCompile Include="TestReadline3.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="InOutFile.h" />

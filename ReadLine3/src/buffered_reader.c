@@ -75,7 +75,7 @@ BOOL br_read(_Inout_ BUFFERED_READER* br, _Inout_ char* nextByte, _Out_ BOOL* eo
 
 	return TRUE;
 }
-
+/*
 BOOL br_peek(_In_ const BUFFERED_READER* br, _In_ const DWORD offset, _Inout_ char* byte)
 {
 	BOOL ok;
@@ -93,3 +93,4 @@ BOOL br_peek(_In_ const BUFFERED_READER* br, _In_ const DWORD offset, _Inout_ ch
 
 	return ok;
 }
+*/

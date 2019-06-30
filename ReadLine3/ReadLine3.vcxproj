@@ -20,9 +20,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\buffered_reader.c" />
+    <ClCompile Include="src\Misc.c" />
+    <ClCompile Include="src\readline3.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\buffered_reader.h" />
+    <ClInclude Include="src\Misc.h" />
+    <ClInclude Include="src\readline3.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
