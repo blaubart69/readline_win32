@@ -25,8 +25,7 @@ void br_free(_In_ BUFFERED_READER* br)
 	HeapFree(GetProcessHeap(), 0, br);
 }
 
-//BOOL fill_buffer(_In_ HANDLE fp, _Inout_ char* buf, _In_ DWORD size, _Out_ DWORD* len)
-BOOL fill_buffer(_Inout_ BUFFERED_READER* br)
+static BOOL fill_buffer(_Inout_ BUFFERED_READER* br)
 {
 	BOOL ok = ReadFile(
 		br->fp
@@ -35,7 +34,7 @@ BOOL fill_buffer(_Inout_ BUFFERED_READER* br)
 		, &br->len
 		, NULL);
 
-	if ( ok && br->len > 0 )
+	if ( ok )
 	{
 		br->readIdx = 0;
 	}
@@ -43,7 +42,7 @@ BOOL fill_buffer(_Inout_ BUFFERED_READER* br)
 	return ok;
 }
 
-BOOL br_read(_Inout_ BUFFERED_READER* br, _Out_ char* nextByte, _Out_ BOOL* eof)
+BOOL br_read(_Inout_ BUFFERED_READER* br, _Inout_ char* nextByte, _Out_ BOOL* eof)
 {
 	*eof = FALSE;
 

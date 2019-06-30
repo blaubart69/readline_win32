@@ -41,6 +41,22 @@ namespace TestReadLine3
 			AssertNextChar('e');
 			AssertNextChar('r');
 		}
+		TEST_METHOD(AdditionalReadAfterEnd)
+		{
+			_hTestfile->WriteA("be");
+			initBr(32);
+
+			AssertNextChar('b');
+			AssertNextChar('e');
+
+			char nextChar;
+			BOOL eof;
+			BOOL ok = br_read(_br, &nextChar, &eof);
+			Assert::IsTrue(ok == TRUE);
+			Assert::IsTrue(eof == TRUE);
+
+		}
+
 		TEST_METHOD(EmptyFile)
 		{
 			initBr(32);
@@ -104,6 +120,8 @@ namespace TestReadLine3
 				(UINT)uniqueCounter
 				, L"c:\\temp\\BufferedReader"
 				, L"br_");
+
+			LastRc = 0;
 		}
 
 		TEST_METHOD_CLEANUP(cleanMeth)
