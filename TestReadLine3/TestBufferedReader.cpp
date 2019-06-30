@@ -54,7 +54,6 @@ namespace TestReadLine3
 			BOOL ok = br_read(_br, &nextChar, &eof);
 			Assert::IsTrue(ok == TRUE);
 			Assert::IsTrue(eof == TRUE);
-
 		}
 
 		TEST_METHOD(EmptyFile)
@@ -106,6 +105,44 @@ namespace TestReadLine3
 			AssertNextChar('9');
 			AssertNextChar('0');
 		}
+		TEST_METHOD(PeekBytesBeforeRead)
+		{
+			_hTestfile->WriteA("123");
+			initBr(16);
+
+			char peek;
+
+			AssertNextChar('1');
+
+			Assert::IsTrue(br_peek(_br, 0, &peek));
+			Assert::AreEqual<char>('2', peek);
+			AssertNextChar('2');
+
+			Assert::IsTrue(br_peek(_br, 0, &peek));
+			Assert::AreEqual<char>('3', peek);
+			AssertNextChar('3');
+		}
+		TEST_METHOD(PeekBytesBeforeReadUsingFillBuffer)
+		{
+			_hTestfile->WriteA("123");
+			initBr(16);
+
+			char peek;
+
+			Assert::IsTrue(br_fill_buffer(_br));
+			Assert::IsTrue(br_peek(_br, 0, &peek));
+			Assert::AreEqual<char>('1', peek);
+			AssertNextChar('1');
+
+			Assert::IsTrue(br_peek(_br, 0, &peek));
+			Assert::AreEqual<char>('2', peek);
+			AssertNextChar('2');
+
+			Assert::IsTrue(br_peek(_br, 0, &peek));
+			Assert::AreEqual<char>('3', peek);
+			AssertNextChar('3');
+		}
+
 
 		TEST_CLASS_INITIALIZE(classInit)
 		{
@@ -123,7 +160,6 @@ namespace TestReadLine3
 
 			LastRc = 0;
 		}
-
 		TEST_METHOD_CLEANUP(cleanMeth)
 		{
 			if (LastRc == 0)

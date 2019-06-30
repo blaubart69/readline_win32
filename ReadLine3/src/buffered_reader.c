@@ -25,7 +25,7 @@ void br_free(_In_ BUFFERED_READER* br)
 	HeapFree(GetProcessHeap(), 0, br);
 }
 
-static BOOL fill_buffer(_Inout_ BUFFERED_READER* br)
+BOOL br_fill_buffer(_Inout_ BUFFERED_READER* br)
 {
 	BOOL ok = ReadFile(
 		br->fp
@@ -42,15 +42,16 @@ static BOOL fill_buffer(_Inout_ BUFFERED_READER* br)
 	return ok;
 }
 
-BOOL br_read(_Inout_ BUFFERED_READER* br, _Inout_ char* nextByte, _Out_ BOOL* eof)
+static BOOL ensure_buffer(_Inout_ BUFFERED_READER* br, _Out_ BOOL* eof)
 {
 	*eof = FALSE;
+	BOOL ok = TRUE;
 
 	if (br->readIdx == br->len)
 	{
-		if (!fill_buffer(br))
+		if (!br_fill_buffer(br))
 		{
-			return FALSE;
+			ok = FALSE;
 		}
 
 		if (br->len == 0)
@@ -59,11 +60,36 @@ BOOL br_read(_Inout_ BUFFERED_READER* br, _Inout_ char* nextByte, _Out_ BOOL* eo
 		}
 	}
 
-	if ( !*eof )
+	return ok;
+}
+
+BOOL br_read(_Inout_ BUFFERED_READER* br, _Inout_ char* nextByte, _Out_ BOOL* eof)
+{
+	BOOL ok = ensure_buffer(br, eof);
+
+	if ( ok && !*eof )
 	{
 		*nextByte = br->buf[br->readIdx];
 		br->readIdx += 1;
 	}
 
 	return TRUE;
+}
+
+BOOL br_peek(_In_ const BUFFERED_READER* br, _In_ const DWORD offset, _Inout_ char* byte)
+{
+	BOOL ok;
+	DWORD peekIdx = br->readIdx + offset;
+
+	if (peekIdx < br->len)
+	{
+		*byte = br->buf[peekIdx];
+		ok = TRUE;
+	}
+	else
+	{
+		ok = FALSE;
+	}
+
+	return ok;
 }

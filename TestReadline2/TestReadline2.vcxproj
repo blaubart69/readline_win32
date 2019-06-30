@@ -173,7 +173,9 @@
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
-    <Object Include="..\readline2\Debug\readline2.obj" />
+    <ProjectReference Include="..\readline2\readline2.vcxproj">
+      <Project>{b283908c-b80d-4687-b7a7-650014f7af46}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
