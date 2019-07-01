@@ -23,11 +23,12 @@ namespace TestRL3
 			LPWSTR line;
 			DWORD cchLen;
 
-			DWORD rc = rl3_next(rl, line, &cchLen);
-			if (rc != 0)
+			BOOL ok = rl3_next(rl, &line, &cchLen);
+			if (!ok)
 			{
-				WCHAR err[128];
-				wsprintf(err, L"readline2->next() returned rc: %d", rc);
+				WCHAR err[32];
+				DWORD rc = GetLastError();
+				wsprintf(err, L"readline3->next() FAILED. LastError: %d", rc);
 				Assert::Fail(err);
 			}
 
@@ -44,10 +45,21 @@ namespace TestRL3
 		}
 
 	public:
-
+		
 		TEST_CLASS_INITIALIZE(classInit)
 		{
 			uniqueCounterRL = 0;
+			if (!CreateDirectoryW(L"c:\\temp\\readline3", NULL))
+			{
+				DWORD rc = GetLastError();
+
+				if (rc != ERROR_ALREADY_EXISTS)
+				{
+					WCHAR err[32];
+					wsprintf(err, L"CreateDirectoryW(readline3) rc: %d", rc);
+					Assert::Fail(err);
+				}
+			}
 		}
 		TEST_METHOD_INITIALIZE(initMeth)
 		{
@@ -55,134 +67,23 @@ namespace TestRL3
 			hTmp = new InOutFile(
 				(UINT)uniqueCounterRL
 				, L"c:\\temp\\readline3"
-				, L"rl2_");
+				, L"rl3_");
 		}
-
-		TEST_METHOD_CLEANUP(cleanMeth)
+		
+		TEST_METHOD_CLEANUP(cleanMeth3)
 		{
-			if (LastRc == 0)
-			{
+			if (LastRc == 0) {
 				AssertReadline(NULL);
 			}
+
 			rl3_free(rl);
 			delete hTmp;
-			
 		}
-		//
-		// wide
-		//
-		/*
-		TEST_METHOD(OneLineWithCrLfW)
-		{
-			hTmp->WriteW(L"berni\r\n");
-			initReadline(16);
-			AssertReadline(L"berni");
-		}
-		TEST_METHOD(OneLineWithoutCrLfW)
-		{
-			hTmp->WriteW(L"berni");
-			initReadline(32);
-			AssertReadline(L"berni");
-		}
-		TEST_METHOD(TwoLinesWithinBufferW)
-		{
-			hTmp->WriteW(L"berni\r\nspindler\r\n");
-
-			initReadline(64);
-			AssertReadline(L"berni");
-			AssertReadline(L"spindler");
-		}
-		TEST_METHOD(TwoLinesWithinBufferW_secondWithoutCrLf)
-		{
-			hTmp->WriteW(L"berni\r\nspindler");
-
-			initReadline(64);
-			AssertReadline(L"berni");
-			AssertReadline(L"spindler");
-		}
-				TEST_METHOD(OneLineWithoutCrLfW_bufferToSmall)
-		{
-			hTmp->WriteW(L"berni");
-
-			LPWSTR line;
-			DWORD  cchLen;
-
-			initReadline(8);
-			//DWORD rc = rl_readline(rl, &line, &cchLen);
-			DWORD rc = rl->next(line, cchLen);
-			Assert::IsTrue(rc == ERROR_INSUFFICIENT_BUFFER);
-			LastRc = rc;
-			Assert::IsNull(line);
-			Assert::IsTrue(0 == cchLen);
-		}
-		TEST_METHOD(SecondLineDoesNotFitInBuffer_W)
-		{
-			hTmp->WriteW(L"12345\r\nabcdefghijkl");
-
-			initReadline(13 * 2);
-			AssertReadline(L"12345");
-			AssertReadline(L"abcdefghijkl");
-		}
-		TEST_METHOD(OneEmtpyLineW)
-		{
-			hTmp->WriteW(L"\r\n");
-			initReadline(16);
-			AssertReadline(L"");
-		}
-		TEST_METHOD(TwoEmtpyLineW)
-		{
-			hTmp->WriteW(L"\r\n\r\n");
-			initReadline(16);
-			AssertReadline(L"");
-			AssertReadline(L"");
-		}
-		TEST_METHOD(SixemptyLinesW)
-		{
-			hTmp->WriteW(L"\r\n\r\n\r\n\r\n\r\n\r\n");
-			initReadline(128);
-			AssertReadline(L"");
-			AssertReadline(L"");
-			AssertReadline(L"");
-			AssertReadline(L"");
-			AssertReadline(L"");
-			AssertReadline(L"");
-		}
-		TEST_METHOD(SixEmptyLinesWithTooSmallBufferW)
-		{
-			hTmp->WriteW(L"\r\n\r\n\r\n\r\n\r\n\r\n");
-			initReadline(8);
-
-			AssertReadline(L"");
-			AssertReadline(L"");
-			AssertReadline(L"");
-			AssertReadline(L"");
-			AssertReadline(L"");
-			AssertReadline(L"");
-		}
-		TEST_METHOD(UnixOneEmptyLineW)
-		{
-			hTmp->WriteW(L"\n");
-			initReadline(6);
-			AssertReadline(L"");
-		}
-		TEST_METHOD(UnixTwoEmptyLineW)
-		{
-			hTmp->WriteW(L"\n\n");
-			initReadline(6);
-			AssertReadline(L"");
-			AssertReadline(L"");
-		}
-		TEST_METHOD(UnixOneLineWithLfW)
-		{
-			hTmp->WriteW(L"Berni\n");
-			initReadline(16);
-			AssertReadline(L"Berni");
-		}
-
-		*/
+		
 		//
 		// one line with crlf
 		//
+		
 		TEST_METHOD(OneLineWithCrLf)
 		{
 			hTmp->WriteA("Berni\r\n");
@@ -435,3 +336,117 @@ namespace TestRL3
 		}
 	};
 }
+
+
+//
+// wide
+//
+/*
+TEST_METHOD(OneLineWithCrLfW)
+{
+	hTmp->WriteW(L"berni\r\n");
+	initReadline(16);
+	AssertReadline(L"berni");
+}
+TEST_METHOD(OneLineWithoutCrLfW)
+{
+	hTmp->WriteW(L"berni");
+	initReadline(32);
+	AssertReadline(L"berni");
+}
+TEST_METHOD(TwoLinesWithinBufferW)
+{
+	hTmp->WriteW(L"berni\r\nspindler\r\n");
+
+	initReadline(64);
+	AssertReadline(L"berni");
+	AssertReadline(L"spindler");
+}
+TEST_METHOD(TwoLinesWithinBufferW_secondWithoutCrLf)
+{
+	hTmp->WriteW(L"berni\r\nspindler");
+
+	initReadline(64);
+	AssertReadline(L"berni");
+	AssertReadline(L"spindler");
+}
+		TEST_METHOD(OneLineWithoutCrLfW_bufferToSmall)
+{
+	hTmp->WriteW(L"berni");
+
+	LPWSTR line;
+	DWORD  cchLen;
+
+	initReadline(8);
+	//DWORD rc = rl_readline(rl, &line, &cchLen);
+	DWORD rc = rl->next(line, cchLen);
+	Assert::IsTrue(rc == ERROR_INSUFFICIENT_BUFFER);
+	LastRc = rc;
+	Assert::IsNull(line);
+	Assert::IsTrue(0 == cchLen);
+}
+TEST_METHOD(SecondLineDoesNotFitInBuffer_W)
+{
+	hTmp->WriteW(L"12345\r\nabcdefghijkl");
+
+	initReadline(13 * 2);
+	AssertReadline(L"12345");
+	AssertReadline(L"abcdefghijkl");
+}
+TEST_METHOD(OneEmtpyLineW)
+{
+	hTmp->WriteW(L"\r\n");
+	initReadline(16);
+	AssertReadline(L"");
+}
+TEST_METHOD(TwoEmtpyLineW)
+{
+	hTmp->WriteW(L"\r\n\r\n");
+	initReadline(16);
+	AssertReadline(L"");
+	AssertReadline(L"");
+}
+TEST_METHOD(SixemptyLinesW)
+{
+	hTmp->WriteW(L"\r\n\r\n\r\n\r\n\r\n\r\n");
+	initReadline(128);
+	AssertReadline(L"");
+	AssertReadline(L"");
+	AssertReadline(L"");
+	AssertReadline(L"");
+	AssertReadline(L"");
+	AssertReadline(L"");
+}
+TEST_METHOD(SixEmptyLinesWithTooSmallBufferW)
+{
+	hTmp->WriteW(L"\r\n\r\n\r\n\r\n\r\n\r\n");
+	initReadline(8);
+
+	AssertReadline(L"");
+	AssertReadline(L"");
+	AssertReadline(L"");
+	AssertReadline(L"");
+	AssertReadline(L"");
+	AssertReadline(L"");
+}
+TEST_METHOD(UnixOneEmptyLineW)
+{
+	hTmp->WriteW(L"\n");
+	initReadline(6);
+	AssertReadline(L"");
+}
+TEST_METHOD(UnixTwoEmptyLineW)
+{
+	hTmp->WriteW(L"\n\n");
+	initReadline(6);
+	AssertReadline(L"");
+	AssertReadline(L"");
+}
+TEST_METHOD(UnixOneLineWithLfW)
+{
+	hTmp->WriteW(L"Berni\n");
+	initReadline(16);
+	AssertReadline(L"Berni");
+}
+
+*/

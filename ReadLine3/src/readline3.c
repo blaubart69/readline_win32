@@ -116,21 +116,33 @@ BOOL convert_readbuf_to_linebuf(_Inout_ READLINE3* rl, _In_ const DWORD bytesInR
 	}
 }
 
-DWORD clearCrLf(_Inout_ WCHAR* line_buffer, _In_ DWORD newLineIdx)
+DWORD clearCrLf(_Inout_ WCHAR* line_buffer, _In_ DWORD lastCharIdx)
 {
-	int idxToSetZero = newLineIdx;
+	DWORD newLastCharIdx = lastCharIdx;
 
-	if (newLineIdx > 0 && line_buffer[newLineIdx - 1] == L'\r')
+	if (line_buffer[newLastCharIdx] == L'\n')
 	{
-		--idxToSetZero;
+		line_buffer[newLastCharIdx] = L'\0';
+		if (newLastCharIdx > 0)
+		{
+			--newLastCharIdx;
+		}
 	}
-	line_buffer[idxToSetZero] = L'\0';
 
-	return idxToSetZero;
+	if (line_buffer[newLastCharIdx] == L'\r')
+	{
+		line_buffer[newLastCharIdx] = L'\0';
+		if (newLastCharIdx > 0)
+		{
+			--newLastCharIdx;
+		}
+	}
+
+	return newLastCharIdx;
 }
 
 _Success_(return)
-BOOL rl3_next(_Inout_ READLINE3* rl, _Out_ WCHAR* line, _Out_ DWORD* length)
+BOOL rl3_next(_Inout_ READLINE3* rl, _Out_ LPWSTR* line, _Out_ DWORD* length)
 {
 	if (rl->first)
 	{
@@ -149,8 +161,8 @@ BOOL rl3_next(_Inout_ READLINE3* rl, _Out_ WCHAR* line, _Out_ DWORD* length)
 
 	if (bytesInReadBuffer == 0)
 	{
-		line = NULL;
-		length = 0;
+		*line = NULL;
+		*length = 0;
 		return TRUE;
 	}
 
@@ -160,9 +172,11 @@ BOOL rl3_next(_Inout_ READLINE3* rl, _Out_ WCHAR* line, _Out_ DWORD* length)
 		return FALSE;
 	}
 
-	DWORD endIdx = clearCrLf(rl->linebuf, wideCharsWritten - 1);
-	line = rl->linebuf;
-	*length = endIdx;
+	rl->linebuf[wideCharsWritten] = L'\0';
+	DWORD lastCharIdx = clearCrLf(rl->linebuf, wideCharsWritten-1);
+
+	*line = rl->linebuf;
+	*length = lastCharIdx + 1;
 
 	return TRUE;
 }

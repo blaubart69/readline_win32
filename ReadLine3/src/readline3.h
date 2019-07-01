@@ -22,7 +22,7 @@ typedef struct _READLINE3
 
 READLINE3* rl3_init(HANDLE fp, DWORD bufsize);
 void rl3_free(READLINE3* rl);
-BOOL rl3_next(_Inout_ READLINE3* rl, _Out_ WCHAR* line, _Out_ DWORD* length);
+BOOL rl3_next(_Inout_ READLINE3* rl, _Out_ LPWSTR* line, _Out_ DWORD* length);
 
 #ifdef __cplusplus
 }
