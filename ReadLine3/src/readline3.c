@@ -74,7 +74,10 @@ BOOL fill_read_buffer_with_line(
 		{
 			break;
 		}
-
+		if (data == '\r')
+		{
+			continue;
+		}
 		if (writeIdx >= bufsize)
 		{
 			ok = FALSE;
@@ -120,21 +123,15 @@ DWORD clearCrLf_setTrailingZero(_Inout_ WCHAR* line_buffer, _In_ DWORD len)
 {
 	// len is at least 1
 
-	if ((int)len - 2 >= 0 && line_buffer[len - 2] == L'\r')
+	if (line_buffer[len-1] == L'\n')
 	{
-		line_buffer[len - 2] = L'\0';
-		return len - 2;
-	}
-
-	if (line_buffer[len-1] != L'\n')
-	{
-		line_buffer[len] = L'\0';
-		return len;
+		line_buffer[len-1] = L'\0';
+		return len-1;
 	}
 	else
 	{
-		line_buffer[len - 1] = L'\0';
-		return len - 1;
+		line_buffer[len] = L'\0';
+		return len;
 	}
 }
 
