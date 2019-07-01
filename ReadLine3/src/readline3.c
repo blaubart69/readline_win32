@@ -64,13 +64,6 @@ BOOL fill_read_buffer_with_line(
 
 	for(;;)
 	{
-		if (writeIdx >= bufsize)
-		{
-			ok = FALSE;
-			SetLastError(ERROR_INSUFFICIENT_BUFFER);
-			break;
-		}
-
 		ok = br_read(br, &data, &eof);
 
 		if (!ok)
@@ -79,6 +72,13 @@ BOOL fill_read_buffer_with_line(
 		}
 		if (eof)
 		{
+			break;
+		}
+
+		if (writeIdx >= bufsize)
+		{
+			ok = FALSE;
+			SetLastError(ERROR_INSUFFICIENT_BUFFER);
 			break;
 		}
 
@@ -141,6 +141,9 @@ DWORD clearCrLf_setTrailingZero(_Inout_ WCHAR* line_buffer, _In_ DWORD len)
 _Success_(return)
 BOOL rl3_next(_Inout_ READLINE3* rl, _Out_ LPWSTR* line, _Out_ DWORD* length)
 {
+	//
+	// detect BOM. set codepage
+	//
 	if (rl->first)
 	{
 		rl->first = FALSE;
@@ -149,26 +152,34 @@ BOOL rl3_next(_Inout_ READLINE3* rl, _Out_ LPWSTR* line, _Out_ DWORD* length)
 			return FALSE;
 		}
 	}
-
+	//
+	// read whole line to buffer. With newline!
+	//
 	DWORD bytesInReadBuffer;
 	if (!fill_read_buffer_with_line(rl->br, rl->readbuf, rl->bufsize, &bytesInReadBuffer))
 	{
 		return FALSE;
 	}
-
+	//
+	// if no more bytes we reached EOF
+	//
 	if (bytesInReadBuffer == 0)
 	{
 		*line = NULL;
 		*length = 0;
 		return TRUE;
 	}
-
+	//
+	// convert the line to WCHAR
+	//
 	int wideCharsWritten = 0;
 	if (!convert_readbuf_to_linebuf(rl, bytesInReadBuffer, &wideCharsWritten))
 	{
 		return FALSE;
 	}
-
+	//
+	// cut \r, \n and set trailing zero
+	//
 	*length = clearCrLf_setTrailingZero(rl->linebuf, wideCharsWritten);
 	*line = rl->linebuf;
 

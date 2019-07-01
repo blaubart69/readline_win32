@@ -320,6 +320,12 @@ namespace TestRL3
 			initReadline(32);
 			AssertReadline(L"ẞßöäü€@");
 		}
+		TEST_METHOD(oneline_fits_exactly_into_buffer)
+		{
+			hTmp->WriteA("12345678");
+			initReadline(8);
+			AssertReadline(L"12345678");
+		}
 		TEST_METHOD(UTF8_more_chars_small_buffer_results_in_ERROR_INSUFFICIENT_BUFFER)
 		{
 			hTmp->WriteUTF8BOM();
