@@ -320,19 +320,31 @@ namespace TestRL3
 			initReadline(32);
 			AssertReadline(L"ẞßöäü€@");
 		}
-		TEST_METHOD(UTF8_more_chars_small_buffer)
+		TEST_METHOD(UTF8_more_chars_small_buffer_results_in_ERROR_INSUFFICIENT_BUFFER)
 		{
 			hTmp->WriteUTF8BOM();
 			hTmp->WriteUTF8(L"ẞßöäü€@\r\n");
 			initReadline(7);
-			AssertReadline(L"ẞßöäü€@");
+
+			LPWSTR line;
+			DWORD cchLen;
+			Assert::IsFalse(rl3_next(rl, &line, &cchLen));
+			LastRc = GetLastError();
+			Assert::AreEqual<DWORD>(122, LastRc);
 		}
-		TEST_METHOD(UTF8_more_chars_small_buffer_noCrLf)
+		TEST_METHOD(UTF8_more_chars_small_buffer_noCrLf_results_in_ERROR_INSUFFICIENT_BUFFER)
 		{
 			hTmp->WriteUTF8BOM();
 			hTmp->WriteUTF8(L"ẞßöäü€@");
 			initReadline(7);
-			AssertReadline(L"ẞßöäü€@");
+
+			LPWSTR line;
+			DWORD cchLen;
+			Assert::IsFalse(rl3_next(rl, &line, &cchLen));
+			LastRc = GetLastError();
+			Assert::AreEqual<DWORD>(122, LastRc);
+
+
 		}
 	};
 }
