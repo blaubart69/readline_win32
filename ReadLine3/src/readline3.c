@@ -150,7 +150,7 @@ BOOL rl3_next(_Inout_ READLINE3* rl, _Out_ LPWSTR* line, _Out_ DWORD* length)
 		}
 	}
 	//
-	// read whole line to buffer. With newline!
+	// read whole line to buffer. With \n. SKIP \r!
 	//
 	DWORD bytesInReadBuffer;
 	if (!fill_read_buffer_with_line(rl->br, rl->readbuf, rl->bufsize, &bytesInReadBuffer))
@@ -175,7 +175,7 @@ BOOL rl3_next(_Inout_ READLINE3* rl, _Out_ LPWSTR* line, _Out_ DWORD* length)
 		return FALSE;
 	}
 	//
-	// cut \r, \n and set trailing zero
+	// cut \n and set trailing zero
 	//
 	*length = clearCrLf_setTrailingZero(rl->linebuf, wideCharsWritten);
 	*line = rl->linebuf;
