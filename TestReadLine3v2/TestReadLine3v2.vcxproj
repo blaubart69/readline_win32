@@ -172,7 +172,7 @@
     <ClCompile Include="TestReadline3v2.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ReadLine3v2\ReadLine3v2.vcxproj">
+    <ProjectReference Include="..\ReadLine3\ReadLine3.vcxproj">
       <Project>{faa5b514-b249-403e-a5b3-c6b8aca7c690}</Project>
     </ProjectReference>
   </ItemGroup>

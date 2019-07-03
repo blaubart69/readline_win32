@@ -13,7 +13,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestReadline2", "TestReadli
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestReadLine3v2", "TestReadLine3v2\TestReadLine3v2.vcxproj", "{AA01A37B-9132-40E1-B87A-10AB3823ED70}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ReadLine3v2", "ReadLine3v2\ReadLine3v2.vcxproj", "{FAA5B514-B249-403E-A5B3-C6B8ACA7C690}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ReadLine3", "ReadLine3\ReadLine3.vcxproj", "{FAA5B514-B249-403E-A5B3-C6B8ACA7C690}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
