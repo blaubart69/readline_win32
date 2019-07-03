@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29020.237
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "readline1", "readline1\readline1.vcxproj", "{D0B72076-1C9A-498B-B856-A1AC103C5271}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ReadLine1", "readline1\readline1.vcxproj", "{D0B72076-1C9A-498B-B856-A1AC103C5271}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LineReader", "LineReader\LineReader.vcxproj", "{BA92F8E2-7990-48FC-9108-42B3BDB84DBC}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "readline2", "readline2\readline2.vcxproj", "{B283908C-B80D-4687-B7A7-650014F7AF46}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ReadLine2", "readline2\readline2.vcxproj", "{B283908C-B80D-4687-B7A7-650014F7AF46}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestReadline2", "TestReadline2\TestReadline2.vcxproj", "{EB8086E5-C06E-4137-9AAA-95E4DCDA3D1C}"
 EndProject
