@@ -17,7 +17,7 @@
 
 #include "InOutFile.h"
 
-#include "../ReadLine3/src/buffered_reader.h"
-#include "../ReadLine3/src/readline3.h"
+#include "../ReadLine3v2/src/buffered_reader.h"
+#include "../ReadLine3v2/src/readline3.h"
 
 #endif //PCH_H

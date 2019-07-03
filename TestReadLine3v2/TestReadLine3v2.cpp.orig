@@ -1,0 +1,16 @@
+#include "pch.h"
+#include "CppUnitTest.h"
+
+using namespace Microsoft::VisualStudio::CppUnitTestFramework;
+
+namespace TestReadLine3v2
+{
+	TEST_CLASS(TestReadLine3v2)
+	{
+	public:
+		
+		TEST_METHOD(TestMethod1)
+		{
+		}
+	};
+}
