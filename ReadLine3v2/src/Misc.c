@@ -39,8 +39,8 @@ void tryDetectBOM(
 	}
 }
 
-BOOLEAN WINAPI
-_DllMainCRTStartup(IN HINSTANCE hDllHandle, IN DWORD nReason, IN LPVOID Reserved)
-{
-	return TRUE;
-}
+//BOOLEAN WINAPI
+//_DllMainCRTStartup(IN HINSTANCE hDllHandle, IN DWORD nReason, IN LPVOID Reserved)
+//{
+//	return TRUE;
+//}
