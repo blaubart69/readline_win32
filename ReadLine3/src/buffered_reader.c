@@ -63,7 +63,7 @@ static BOOL ensure_buffer(_Inout_ BUFFERED_READER* br, _Out_ BOOL* eof)
 	return ok;
 }
 
-BOOL br_read(_Inout_ BUFFERED_READER* br, _Inout_ char* nextByte, _Out_ BOOL* eof)
+BOOL br_read(_Inout_ BUFFERED_READER* br, _Inout_ char* nextByte, _Outptr_ BOOL* eof)
 {
 	BOOL ok = ensure_buffer(br, eof);
 
@@ -75,22 +75,3 @@ BOOL br_read(_Inout_ BUFFERED_READER* br, _Inout_ char* nextByte, _Out_ BOOL* eo
 
 	return TRUE;
 }
-/*
-BOOL br_peek(_In_ const BUFFERED_READER* br, _In_ const DWORD offset, _Inout_ char* byte)
-{
-	BOOL ok;
-	DWORD peekIdx = br->readIdx + offset;
-
-	if (peekIdx < br->len)
-	{
-		*byte = br->buf[peekIdx];
-		ok = TRUE;
-	}
-	else
-	{
-		ok = FALSE;
-	}
-
-	return ok;
-}
-*/

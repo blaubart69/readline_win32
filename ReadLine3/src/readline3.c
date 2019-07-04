@@ -53,18 +53,18 @@ BOOL fill_read_buffer_with_line(
 	  _Inout_					BUFFERED_READER* br
 	, __inout_bcount(bufsize)	char*	buf
 	, _In_ const				DWORD	bufsize
-	, _Out_						DWORD*	bytesWritten
-	, _Out_						BOOL*	eof)
+	, _Outptr_					DWORD*	bytesWritten
+	, _Outptr_					BOOL*	eof)
 {
 	BOOL ok;
 	
-	char data;
 	*eof = FALSE;
 	*bytesWritten = 0;
 	DWORD writeIdx = 0;
 
 	for(;;)
 	{
+		char data;
 		ok = br_read(br, &data, eof);
 
 		if (!ok)
@@ -90,8 +90,7 @@ BOOL fill_read_buffer_with_line(
 			SetLastError(ERROR_INSUFFICIENT_BUFFER);
 			break;
 		}
-		buf[writeIdx] = data;
-		writeIdx += 1;
+		buf[writeIdx++] = data;
 	}
 
 	*bytesWritten = writeIdx;
@@ -120,7 +119,7 @@ BOOL convert_readbuf_to_linebuf(_Inout_ READLINE3* rl, _In_ const DWORD bytesInR
 }
 
 _Success_(return)
-BOOL rl3_next(_Inout_ READLINE3* rl, _Out_ LPWSTR* line, _Out_ DWORD* length)
+BOOL rl3_next(_Inout_ READLINE3* rl, _Outptr_ LPWSTR* line, _Outptr_ DWORD* length)
 {
 	*line = rl->linebuf;
 	//
