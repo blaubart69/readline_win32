@@ -38,9 +38,12 @@ void tryDetectBOM(
 		}
 	}
 }
-
-//BOOLEAN WINAPI
-//_DllMainCRTStartup(IN HINSTANCE hDllHandle, IN DWORD nReason, IN LPVOID Reserved)
-//{
-//	return TRUE;
-//}
+/*
+ * 2019-07-07 Bearnie
+ *	use _DllMainCRTStartup when building a DLL
+BOOLEAN WINAPI
+_DllMainCRTStartup(IN HINSTANCE hDllHandle, IN DWORD nReason, IN LPVOID Reserved)
+{
+	return TRUE;
+}
+*/
