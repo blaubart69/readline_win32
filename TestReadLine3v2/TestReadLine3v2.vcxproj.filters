@@ -32,5 +32,8 @@
     <ClCompile Include="TestReadline3v2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TestBufreaderWithGivenMem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

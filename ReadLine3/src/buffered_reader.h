@@ -13,6 +13,7 @@ typedef struct _BUFFERED_READER {
 } BUFFERED_READER;
 
 BUFFERED_READER*	br_init(_In_ HANDLE fp, _In_ DWORD size);
+BUFFERED_READER*  br_initEx(_In_ HANDLE fp, _In_ LPVOID mem, _In_ DWORD memLen);
 void				br_free(_In_ BUFFERED_READER* br);
 
 BOOL	br_fill_buffer(_Inout_ BUFFERED_READER* br);

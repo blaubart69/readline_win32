@@ -22,6 +22,27 @@ BUFFERED_READER* br_init(_In_ HANDLE fp, _In_ DWORD sizebytes)
 
 	return br;
 }
+BUFFERED_READER* br_initEx(_In_ HANDLE fp, _In_ LPVOID mem, _In_ DWORD memLen)
+{
+	DWORD sizeStruct = sizeof(BUFFERED_READER);
+
+	if (memLen < sizeStruct)
+	{
+		return NULL;
+	}
+
+	BUFFERED_READER* br = mem;
+
+	if (br != NULL)
+	{
+		br->fp = fp;
+		br->len = 0;
+		br->readIdx = 0;
+		br->capacity = memLen - sizeStruct + 1;
+	}
+
+	return br;
+}
 void br_free(_In_ BUFFERED_READER* br)
 {
 	HeapFree(GetProcessHeap(), 0, br);
