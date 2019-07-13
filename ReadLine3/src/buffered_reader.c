@@ -6,22 +6,24 @@
 
 BUFFERED_READER* br_init(_In_ HANDLE fp, _In_ DWORD sizebytes)
 {
-	BUFFERED_READER* br = (BUFFERED_READER*)HeapAlloc(GetProcessHeap(), 0, sizeof(BUFFERED_READER));
+	SIZE_T toAlloc =
+		sizeof(BUFFERED_READER)
+		+ sizebytes - 1;	// cause struct has one byte "char buf[1]"
+
+	BUFFERED_READER* br = (BUFFERED_READER*)HeapAlloc(GetProcessHeap(), 0, toAlloc);
 	
 	if (br != NULL) 
 	{
 		br->fp = fp;
-		br->size = sizebytes;
+		br->capacity = sizebytes;
 		br->len = 0;
 		br->readIdx = 0;
-		br->buf = HeapAlloc(GetProcessHeap(), 0, sizebytes);
 	}
 
 	return br;
 }
 void br_free(_In_ BUFFERED_READER* br)
 {
-	HeapFree(GetProcessHeap(), 0, br->buf);
 	HeapFree(GetProcessHeap(), 0, br);
 }
 
@@ -30,7 +32,7 @@ BOOL br_fill_buffer(_Inout_ BUFFERED_READER* br)
 	BOOL ok = ReadFile(
 		br->fp
 		, (LPVOID)br->buf
-		, br->size
+		, br->capacity
 		, &br->len
 		, NULL);
 
