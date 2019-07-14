@@ -1,15 +1,33 @@
 #include "readline3.h"
 #include "Misc.h"
 
+#define OFFSETOF(TYPE, ELEMENT) ((size_t)&(((TYPE *)0)->ELEMENT))
+
 READLINE3* rl3_init(HANDLE fp, DWORD bufsize)
 {
-	READLINE3* rl = (READLINE3*)HeapAlloc(GetProcessHeap(), 0, sizeof(READLINE3));
+	SIZE_T sizeLineBuffer		= ((SIZE_T)bufsize) * sizeof(WCHAR);
+	SIZE_T sizeBufferedReader	= sizeof(BUFFERED_READER) + bufsize;
+
+	SIZE_T toAlloc =
+		sizeof(READLINE3)
+		+ sizeLineBuffer			// wchar line buffer
+		+ bufsize					// readbuffer in bytes
+		+ sizeBufferedReader;		// buffered reader: struct + readBuffer
+
+	READLINE3* rl = (READLINE3*)HeapAlloc(GetProcessHeap(), 0, toAlloc);
+
+	SIZE_T off = OFFSETOF(READLINE3, linebuf);
 
 	if (rl != NULL)
 	{
+		rl->readbuf		= (char*)rl + off + sizeLineBuffer;
+		LPVOID memForBr = (char*)rl + off + sizeLineBuffer + (SIZE_T)bufsize;
+		rl->br		= br_initEx(fp, memForBr, sizeBufferedReader);
+		/*
 		rl->br = br_init(fp, bufsize);
 		rl->readbuf = HeapAlloc(GetProcessHeap(), 0, bufsize);
 		rl->linebuf = HeapAlloc(GetProcessHeap(), 0, ((SIZE_T)bufsize + 1) * sizeof(WCHAR) );
+		*/
 		rl->first = TRUE;
 		rl->codepage = CP_ACP;
 		rl->bufsize = bufsize;
@@ -19,9 +37,7 @@ READLINE3* rl3_init(HANDLE fp, DWORD bufsize)
 }
 void rl3_free(READLINE3* rl)
 {
-	br_free(rl->br);
-	HeapFree(GetProcessHeap(), 0, rl->readbuf);
-	HeapFree(GetProcessHeap(), 0, rl->linebuf);
+	HeapFree(GetProcessHeap(), 0, rl);
 }
 
 BOOL handlePossibleBOM(_Inout_ READLINE3* rl)

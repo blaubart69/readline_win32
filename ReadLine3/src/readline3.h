@@ -14,10 +14,10 @@ typedef struct _READLINE3
 {
 	BUFFERED_READER*	br;
 	char*				readbuf;
-	WCHAR*				linebuf;
 	DWORD				bufsize;
 	UINT				codepage;
 	BOOL				first;
+	WCHAR				linebuf[1];
 } READLINE3;
 
 __declspec(dllexport) READLINE3*	rl3_init(HANDLE fp, DWORD bufsize);
