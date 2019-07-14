@@ -22,6 +22,7 @@ void rl3_free(READLINE3* rl)
 	br_free(rl->br);
 	HeapFree(GetProcessHeap(), 0, rl->readbuf);
 	HeapFree(GetProcessHeap(), 0, rl->linebuf);
+	HeapFree(GetProcessHeap(), 0, rl);
 }
 
 BOOL handlePossibleBOM(_Inout_ READLINE3* rl)
